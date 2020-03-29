@@ -6,7 +6,8 @@ onAddRequest = function () {
 
 onSubmitRequest = function () {
     let bub = d3.select("#address");
-
+    
     console.log(bub.node().value);
+
 }
 

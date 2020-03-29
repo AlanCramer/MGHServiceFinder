@@ -1,5 +1,15 @@
-from flask import Flask, render_template, url_for, redirect
+# Base
+import uuid
+
+# Flask
+from flask import Flask, render_template, url_for, redirect, jsonify, request, session
 from flask_oidc import OpenIDConnect
+from flask_cors import CORS
+
+#db
+import sqlite3
+from sqlite3 import Error
+
 
 app = Flask(__name__)
 app.config.update({
@@ -13,9 +23,25 @@ app.config.update({
 oidc = OpenIDConnect(app)
 
 
+def create_connection(db_file):
+    """ create a database connection to a SQLite database """
+    conn = None
+    try:
+        conn = sqlite3.connect(db_file)
+        print(sqlite3.version)
+    except Error as e:
+        print(e)
+    finally:
+        if conn:
+            conn.close()
+
+
 @app.route("/")
+@oidc.require_login
 def home():
-    return render_template("home.html", oidc=oidc)
+    create_connection('testDb.db')
+    info = oidc.user_getinfo(["sub", "name", "email"])
+    return render_template("home.html", profile=info, oidc=oidc)
 
 
 @app.route("/login")
