@@ -6,7 +6,19 @@
 {% if oidc.user_loggedin %}
 <div>
     <div>
-        <input type="submit" name="submit_button" class="btn btn-primary" value="Add Request">
+        <input type="submit" name="submit_button" class="btn btn-primary" value="Add Request" onclick="onAddRequest()">
+    </div>
+
+    <div id="new_request_form" class="hidden">
+        <br>
+        <label for="name">Name </label>
+        <input type="text" id="name" name="Name">
+        <br>
+        <label for="name">Address </label>
+        <input type="text" id="address" name="Address">
+        <br>
+
+        <input type="submit" name="submit_button" class="btn btn-primary" value="Submit Request" onclick="onSubmitRequest()">
     </div>
 
     <div id="map"></div>
@@ -24,7 +36,9 @@
       });
     }
     </script>
-    <script src="https://maps.googleapis.com/maps/api/js?key=<key>&callback=initMap" async defer></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=&callback=initMap" async defer></script>
+
+
 
 </div>
 {% else %}
