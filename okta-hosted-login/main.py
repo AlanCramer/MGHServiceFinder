@@ -7,8 +7,8 @@ from flask_oidc import OpenIDConnect
 from flask_cors import CORS
 
 #db
-import sqlite3
-from sqlite3 import Error
+import dbUtils
+from flask import g
 
 
 app = Flask(__name__)
@@ -23,25 +23,27 @@ app.config.update({
 oidc = OpenIDConnect(app)
 
 
-def create_connection(db_file):
-    """ create a database connection to a SQLite database """
-    conn = None
-    try:
-        conn = sqlite3.connect(db_file)
-        print(sqlite3.version)
-    except Error as e:
-        print(e)
-    finally:
-        if conn:
-            conn.close()
 
 
 @app.route("/")
 @oidc.require_login
 def home():
-    create_connection('testDb.db')
+    # dbUtils.create_connection('testDb.db')
     info = oidc.user_getinfo(["sub", "name", "email"])
+    hello()
     return render_template("home.html", profile=info, oidc=oidc)
+
+def hello():
+    print("here")
+    g.db=dbUtils.get_db()
+    # print(db)
+    # cur = g.db.execute('CREATE TABLE t2 ("name"	TEXT)')
+    # print(cur)
+        # print(table)
+    res=dbUtils.query_db('select * from users')
+    print(res)
+    # for user in res:
+    #     print(user['name'], 'has the address', user['address'])
 
 
 @app.route("/login")
